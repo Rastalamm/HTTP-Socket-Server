@@ -6,6 +6,7 @@ var STATUS_OK = 200;
 var STATUS_NO_CHANGE = 304;
 var STATUS_NOT_FOUND = 400;
 var SERVER_NAME = 'Always A Box';
+var serverTime = new Date(); //numbers format
 
 var server = net.createServer(onConnect);
 
@@ -26,6 +27,20 @@ function onConnect(socket){
 
 }
 
+
+function headerBuilder (data){
+
+
+
+
+}
+
+function bodyBuilder (data){
+
+}
+
+
+
 function dataListener(socket){
 
   socket.on('data', function(data){
@@ -39,15 +54,15 @@ function dataListener(socket){
 
     var reg2 = /(If-Modified-Since): (\w+, \d{1,2} \w{3} \d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{3})/g;
 
-    var modified = reg2.exec(data);
-    var modDate = Date.parse(modified[2]);
+    var modifiedIf = reg2.exec(data);
+    var modDate = Date.parse(modifiedIf[2]);
 
 
 
     //unsure how modified since data comes in, numbers or string number date combo
     // need to add to if statement below the check the date
 
-    if(!modified ){
+    if(!modifiedIf && (dateTime-modDate) > 0){
 
       switch(firstWord[0]) {
         case 'GET':
