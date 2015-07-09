@@ -36,38 +36,44 @@ function dataListener(socket){
     var dataArr = data.split(' ');
     var dateTime = new Date();
 
-    var reg2 = /(If-Modified-Since)/g;
+
+    var reg2 = /(If-Modified-Since): (\w+, \d{1,2} \w{3} \d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{3})/g;
 
     var modified = reg2.exec(data);
+    var modDate = Date.parse(modified[2]);
 
 
-    if(!modified){
+
+    //unsure how modified since data comes in, numbers or string number date combo
+    // need to add to if statement below the check the date
+
+    if(!modified ){
 
       switch(firstWord[0]) {
         case 'GET':
           switch (dataArr[1]){
             case '/':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
               socket.write('\n\n' + source.home);
             break;
 
             case '/hydrogen.html':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
               socket.write('\n\n' + source.hydrogen);
             break;
 
             case '/helium.html':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
               socket.write('\n\n' + source.helium);
             break;
 
             case '/404.html':
-              socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
               socket.write('\n\n' + source.fourOfour);
             break;
 
             case '/css/styles.css':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
               socket.write('\n\n' + source.styles);
             break;
           }
@@ -76,23 +82,23 @@ function dataListener(socket){
         case 'HEAD':
           switch (dataArr[1]){
             case '/':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
             break;
 
             case '/hydrogen.html':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
             break;
 
             case '/helium.html':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
             break;
 
             case '/404.html':
-              socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
             break;
 
             case '/css/styles.css':
-              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+              socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
             break;
           }
         break;
@@ -117,25 +123,26 @@ function dataListener(socket){
         break;
       }
     }else{
+      //no change to info, they only get body
       switch (dataArr[1]){
         case '/':
-          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString()  + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
         break;
 
         case '/hydrogen.html':
-          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
+          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.hydrogen.length + '\n' + 'Connection: ' + 'keep-alive');
         break;
 
         case '/helium.html':
-          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.helium.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
         break;
 
         case '/404.html':
-          socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+          socket.write('HTTP/1.01 ' + STATUS_NOT_FOUND + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.fourOfour.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
         break;
 
         case '/css/styles.css':
-          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
+          socket.write('HTTP/1.01 ' + STATUS_NO_CHANGE + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.styles.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
         break;
       }
 
