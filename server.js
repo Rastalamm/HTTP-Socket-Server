@@ -28,34 +28,77 @@ function onConnect(socket){
 }
 
 
-function headerBuilder (data){
+var resourceList ={
+  '/' : source.index,
+  '/hydrogen.html' : source.hydrogen,
+  '/helium.html': source.helium,
+  '/404.html': source.fourOfour,
+  '/css/styles.css': source.styles
+}
 
+var status;
+var server;
+var date;
+var contentType;
+var contentLength;
+var connection;
+var statusCode;
 
+function headerBuildWrite (data, theUri){
 
+  if(resourceList.hasOwnProperty(theUri){
+    statusCode = STATUS_OK;
+  }else{
+    statusCode = STATUS_NOT_FOUND;
+  }
+
+  status = 'HTTP/1.01 ' + statusCode + '\n';
+  server = 'Server: ' + SERVER_NAME + '\n';
+  date = 'Date: ' + dateTime.toUTCString() + '\n';
+  contentType = 'Content-Type: ' + 'text/html; charset=utf-8' + '\n';
+  contentLength = 'Content Length: ' + resourceList[theUri].length + '\n';
+  connection = 'Connection: ' + 'keep-alive' + '\n';
+
+  socket.write(status + server + date + contentType + contentLength + connection)
 
 }
 
-function bodyBuilder (data){
+function bodyBuildWrite (data){
 
+
+
+
+
+
+
+
+  socket.write('\n\n' + source.home);
 }
 
+function readInput(data){
+
+  var reg1 = /^\w+/g;
+  var firstWord = reg1.exec(data);
+
+  var dataArray = data.split(' ');
+  var theUri = dataArray[1];
+
+  var dateTime = new Date();
+
+
+  var reg2 = /(If-Modified-Since): (\w+, \d{1,2} \w{3} \d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{3})/g;
+
+  var modifiedIf = reg2.exec(data);
+  var modDate = Date.parse(modifiedIf[2]);
+
+
+}
 
 
 function dataListener(socket){
 
   socket.on('data', function(data){
 
-    var reg1 = /^\w+/g;
-    var firstWord = reg1.exec(data);
-
-    var dataArr = data.split(' ');
-    var dateTime = new Date();
-
-
-    var reg2 = /(If-Modified-Since): (\w+, \d{1,2} \w{3} \d{4} \d{1,2}:\d{1,2}:\d{1,2} \w{3})/g;
-
-    var modifiedIf = reg2.exec(data);
-    var modDate = Date.parse(modifiedIf[2]);
 
 
 
@@ -69,7 +112,7 @@ function dataListener(socket){
           switch (dataArr[1]){
             case '/':
               socket.write('HTTP/1.01 ' + STATUS_OK + ' OK' + '\n' + 'Server: ' + SERVER_NAME + '\n' + 'Date: ' + dateTime.toUTCString() + '\n' + 'Content-Type: ' + 'text/html; charset=utf-8' + '\n' + 'Content Length: ' + source.home.length + '\n' + 'Connection: ' + 'keep-alive' + '\n');
-              socket.write('\n\n' + source.home);
+
             break;
 
             case '/hydrogen.html':
