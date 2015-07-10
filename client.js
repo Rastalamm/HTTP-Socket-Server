@@ -8,9 +8,10 @@ var HOST = '0.0.0.0';
 //Jason: .23
 //Judah: .24
 
-var portSelected = portChecker(process.argv)
+var portSelected = portChecker(process.argv);
+var hostSelected = hostCreator(process.argv);
 
-var client = net.connect({host : HOST, port : portSelected}, connectedToServer);
+var client = net.connect({host : hostSelected, port : portSelected}, connectedToServer);
 
 var httpVersion = 'HTTP/1.1';
 
@@ -62,11 +63,27 @@ function portChecker (input){
     portSelected = portSelected[1];
   }
 
+  console.log('portSelected', portSelected);
+
   return portSelected;
 
 }
 
 function hostCreator (input){
+
+  var hostStripper = input.join(' ');
+  var hostCheckReg = /(www.\w+.\w+)|(localhost)/g;
+  var hostCheckProcess = hostCheckReg.exec(hostStripper);
+
+
+  if(hostCheckProcess){
+    hostSelected = hostCheckProcess[0];
+  }else{
+    throw RangeError('bad host');
+  }
+
+  console.log('hostSelected', hostSelected);
+  return hostSelected;
 
 }
 
