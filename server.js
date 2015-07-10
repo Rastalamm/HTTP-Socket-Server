@@ -30,6 +30,7 @@ var theUri;
 var header;
 var bodyMessage;
 var modifiedDateRequest;
+var resourceLength;
 
 server.listen(PORT, function() {
   process.stdout.write('Server Listening on ' + HOST + ':' + PORT + '\n');
@@ -66,6 +67,8 @@ function readInput(data){
   var reg1 = /^\w+/g;
   var firstWord = reg1.exec(data);
   requestType = firstWord[0];
+
+
 
   var dataArray = data.split(' ');
   theUri = dataArray[1];
@@ -118,12 +121,19 @@ function requestReader(data, requestType, theUri){
 
 function headerBuildWrite (data, theUri){
   var dateTime = new Date();
-  var resourceLength = resourceList[theUri].length;
 
-  status = 'HTTP/1.01 ' + statusCode + '\n';
+  if(resourceList[theUri]){
+    resourceLength = resourceList[theUri].length;
+  }else{
+    resourceLength = 0;
+  }
+
+
+  status = 'HTTP/1.1 ' + statusCode + '\n';
   server = 'Server: ' + SERVER_NAME + '\n';
   date = 'Date: ' + dateTime.toUTCString() + '\n';
-  contentType = 'Content-Type: ' + 'text/html; charset=utf-8' + '\n';
+  //if they are looking for css make it text/css
+  //contentType = 'Content-Type: ' + 'text/html; charset=utf-8' + '\n';
   contentLength = 'Content Length: ' + resourceLength + '\n';
   connection = 'Connection: ' + 'keep-alive';
 
