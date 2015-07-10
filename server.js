@@ -5,7 +5,7 @@ var HOST = '0.0.0.0';
 var STATUS_OK = 200;
 var STATUS_NO_CHANGE = 304;
 var STATUS_NOT_FOUND = 404;
-var SERVER_NAME = 'Always A Box';
+var SERVER_NAME = 'A Box';
 var serverTime = new Date(); //numbers format
 
 var server = net.createServer(onConnect);

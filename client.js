@@ -10,8 +10,6 @@ var HOST = '0.0.0.0';
 
 var portSelected = portChecker(process.argv)
 
-
-
 var client = net.connect({host : HOST, port : portSelected}, connectedToServer);
 
 var httpVersion = 'HTTP/1.1';
@@ -27,6 +25,12 @@ var requestMethod;
 var theUri;
 var requestURL = process.argv[process.argv.length-1];
 var clientInput = process.argv;
+
+
+
+client.on('error', function(e){
+  console.log('problem with request: ' + e.message);
+})
 
 //function to optionally set the port
 function portChecker (input){
@@ -47,9 +51,6 @@ function portChecker (input){
   return portSelected;
 
 }
-
-
-
 
 
 function connectedToServer(){
