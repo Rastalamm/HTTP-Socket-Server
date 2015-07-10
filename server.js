@@ -25,14 +25,11 @@ var contentType;
 var contentLength;
 var connection;
 var statusCode;
-
 var requestType;
 var theUri;
-
 var header;
 var bodyMessage;
 var modifiedDateRequest;
-
 
 server.listen(PORT, function() {
   process.stdout.write('Server Listening on ' + HOST + ':' + PORT + '\n');
@@ -82,17 +79,14 @@ function readInput(data){
 
 }
 
-
-
-
 function requestReader(data, requestType, theUri){
-
-  modifiedFilter(data, theUri, modifiedDateRequest)
+  if(checkFourOFour(theUri)){
+    modifiedFilter(data, theUri, modifiedDateRequest)
+  };
 
   switch (requestType){
 
     case 'GET':
-
       headerBuildWrite(data, theUri);
       bodyBuildWrite(data, theUri);
     break;
@@ -120,7 +114,6 @@ function requestReader(data, requestType, theUri){
       //'Default message'
     break;
   }
-
 }
 
 function headerBuildWrite (data, theUri){
@@ -142,27 +135,33 @@ function bodyBuildWrite (data, theUri){
   bodyMessage = '\n\n' + resourceList[theUri];
 }
 
-function modifiedFilter(data, theUri, modifiedDateRequest){
-
+function checkFourOFour (theUri){
   if(!resourceList.hasOwnProperty(theUri)){
     statusCode = STATUS_NOT_FOUND;
     resourceLength = 0;
+    return false;
   }else{
-    //there is a request for modified
-    if(modifiedDateRequest){
-      //if servertime is > date on modified request
-      if(serverTime - modifiedDateRequest > 0){
-        statusCode = STATUS_NO_CHANGE;
-        resourceLength = resourceList[theUri].length
-      }else{
-        //if they want a new copy they go here
-        statusCode = STATUS_OK;
-        resourceLength = resourceList[theUri].length
-      }
+    return true;
+  }
+}
+
+function modifiedFilter(data, theUri, modifiedDateRequest){
+
+  //there is a request for modified
+  if(modifiedDateRequest){
+    //if servertime is > date on modified request
+    if(serverTime - modifiedDateRequest > 0){
+      statusCode = STATUS_NO_CHANGE;
+      resourceLength = resourceList[theUri].length
     }else{
-    //no modified request
+      //if they want a new copy they go here
       statusCode = STATUS_OK;
       resourceLength = resourceList[theUri].length
     }
+  }else{
+  //no modified request
+    statusCode = STATUS_OK;
+    resourceLength = resourceList[theUri].length
   }
+
 }
