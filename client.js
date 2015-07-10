@@ -10,6 +10,7 @@ var HOST = '0.0.0.0';
 
 var client = net.connect({host : HOST, port : PORT}, connectedToServer);
 
+var httpVersion = 'HTTP/1.1';
 var requestURL;
 var header;
 var date;
@@ -17,7 +18,7 @@ var contentType;
 var contentLength;
 var connection;
 var statusCode;
-var requestType = 'GET';
+var requestMethod = 'HEAD';
 var theUri;
 
 function connectedToServer(){
@@ -26,37 +27,36 @@ function connectedToServer(){
 
   console.log(requestURL);
 
-    var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
-console.log(uriReg);
-    theUri = uriReg.exec(requestURL);
-
-    console.log(theUri);
-  function uriCreator (requestURL){
-
-
-  }
-
-
-  function createHeader () {
-
-
-    client.write(header)
-
-  }
+  //Grabs the URI from the input
+  uriCreator(requestURL);
+  createHeader();
+  client.write(header)
 
   client.on('data', readsincoming)
+}
+  function readsincoming(data) {
+    process.stdout.write(data);
+    //console.log(data);
+  }
 
+  function uriCreator (requestURL){
+    var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
+    var uriProcess = uriReg.exec(requestURL);
 
-  function readsincoming() {
+    if(!uriProcess){
+      theUri = '/'
+    }else{
+      theUri = uriProcess[0];
+    }
+  }
 
+  function createHeader () {
+    header = requestMethod + ' ' + theUri +' ' +httpVersion;
   }
 
 
 
 
-
-
-}
 
 
 
