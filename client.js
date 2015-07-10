@@ -34,18 +34,17 @@ var clientInput = process.argv;
 
 
 
-
 //Error if host cannot be reached
 client.on('error', function(e){
 
   switch(e.message){
 
-    case 'EADDRNOTAVAIL':
-      console.log('Wrong port guy' + e);
-    break;
-
     case 'ECONNREFUSED':
       console.log('connection refused' + e);
+    break;
+
+    case 'EADDRNOTAVAIL':
+      console.log('Wrong port guy' + e);
     break;
 
     default:
@@ -83,7 +82,6 @@ function hostCreator (input){
   var hostCheckReg = /(www.\w+.\w+)|(localhost)/g;
   var hostCheckProcess = hostCheckReg.exec(hostStripper);
 
-
   if(hostCheckProcess){
     hostSelected = hostCheckProcess[0];
   }else{
@@ -92,9 +90,7 @@ function hostCreator (input){
 
   console.log('hostSelected', hostSelected);
   return hostSelected;
-
 }
-
 
 function connectedToServer(){
 
@@ -117,14 +113,12 @@ function connectedToServer(){
 
 function readsincoming(data) {
   process.stdout.write(data);
-
 }
 
 function uriCreator (requestURL){
 
   var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
   var uriProcess = uriReg.exec(requestURL);
-
 
   if(!uriProcess){
     theUri = '/'
