@@ -8,6 +8,11 @@ var HOST = '0.0.0.0';
 //Jason: .23
 //Judah: .24
 
+if(process.argv.length < 3){
+  process.stdout.write('You enetered it wrong');
+  process.exit();
+};
+
 var portSelected = portChecker(process.argv);
 var hostSelected = hostCreator(process.argv);
 
@@ -28,6 +33,8 @@ var requestURL = process.argv[process.argv.length-1];
 var clientInput = process.argv;
 
 
+
+
 //Error if host cannot be reached
 client.on('error', function(e){
 
@@ -43,6 +50,7 @@ client.on('error', function(e){
 
     default:
       console.log('This is the error' + e);
+    break;
   }
 
 })
