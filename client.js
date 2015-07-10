@@ -11,50 +11,96 @@ var HOST = '0.0.0.0';
 var client = net.connect({host : HOST, port : PORT}, connectedToServer);
 
 var httpVersion = 'HTTP/1.1';
-var requestURL;
+
 var header;
 var date;
 var contentType;
 var contentLength;
 var connection;
 var statusCode;
-var requestMethod = 'HEAD';
+var methodInput;
+var requestMethod;
 var theUri;
+var requestURL = process.argv[process.argv.length-1];
+var clientInput = process.argv;
+
+
 
 function connectedToServer(){
 
-  requestURL = process.argv[process.argv.length-1];
 
-  console.log(requestURL);
+  //Gets the method client requested
+  getsMethodInput(clientInput)
 
-  //Grabs the URI from the input
+  //sets the method in the header
+  setsMethod (methodInput)
+
+  //Gets the URI from the client input
   uriCreator(requestURL);
+
+  //
   createHeader();
   client.write(header)
 
   client.on('data', readsincoming)
+
 }
-  function readsincoming(data) {
-    process.stdout.write(data);
-    //console.log(data);
+
+function readsincoming(data) {
+  process.stdout.write(data);
+  //console.log(data);
+}
+
+function uriCreator (requestURL){
+  console.log(requestURL)
+  var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
+  var uriProcess = uriReg.exec(requestURL);
+
+
+  if(!uriProcess){
+    theUri = '/'
+  }else{
+    theUri = uriProcess[0];
+  }
+}
+
+function createHeader () {
+  header = requestMethod + ' ' + theUri +' ' +httpVersion;
+}
+
+
+function getsMethodInput(clientInput) {
+
+  var methodInputReg = /\-[a-zA-Z]{1}\b/g;
+  var methodInputprocess =  methodInputReg.exec(clientInput);
+
+  if(methodInputprocess){
+    methodInput = methodInputprocess[0].charAt(1);
+  }else{
+    //sets the default request type
+    methodInput = 'G'
   }
 
-  function uriCreator (requestURL){
-    var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
-    var uriProcess = uriReg.exec(requestURL);
+}
 
-    if(!uriProcess){
-      theUri = '/'
-    }else{
-      theUri = uriProcess[0];
-    }
+
+
+function setsMethod (methodInput){
+
+  switch(methodInput){
+
+    case 'I':
+    case 'i':
+      requestMethod = 'HEAD';
+    break;
+
+    case 'G':
+    case 'g':
+      requestMethod = 'GET';
+    default:
+
   }
-
-  function createHeader () {
-    header = requestMethod + ' ' + theUri +' ' +httpVersion;
-  }
-
-
+}
 
 
 
