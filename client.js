@@ -8,9 +8,15 @@ var HOST = '0.0.0.0';
 //Jason: .23
 //Judah: .24
 
-var portSelected = portChecker(process.argv)
+if(process.argv.length < 3){
+  process.stdout.write('You enetered it wrong');
+  process.exit();
+};
 
-var client = net.connect({host : HOST, port : portSelected}, connectedToServer);
+var portSelected = portChecker(process.argv);
+var hostSelected = hostCreator(process.argv);
+
+var client = net.connect({host : hostSelected, port : portSelected}, connectedToServer);
 
 var httpVersion = 'HTTP/1.1';
 
@@ -28,8 +34,24 @@ var clientInput = process.argv;
 
 
 
+//Error if host cannot be reached
 client.on('error', function(e){
-  console.log('problem with request: ' + e.message);
+
+  switch(e.message){
+
+    case 'ECONNREFUSED':
+      console.log('connection refused' + e);
+    break;
+
+    case 'EADDRNOTAVAIL':
+      console.log('Wrong port guy' + e);
+    break;
+
+    default:
+      console.log('This is the error' + e);
+    break;
+  }
+
 })
 
 //function to optionally set the port
@@ -48,10 +70,27 @@ function portChecker (input){
     portSelected = portSelected[1];
   }
 
+  console.log('portSelected', portSelected);
+
   return portSelected;
 
 }
 
+function hostCreator (input){
+
+  var hostStripper = input.join(' ');
+  var hostCheckReg = /(www.\w+.\w+)|(localhost)/g;
+  var hostCheckProcess = hostCheckReg.exec(hostStripper);
+
+  if(hostCheckProcess){
+    hostSelected = hostCheckProcess[0];
+  }else{
+    throw RangeError('bad host');
+  }
+
+  console.log('hostSelected', hostSelected);
+  return hostSelected;
+}
 
 function connectedToServer(){
 
@@ -74,14 +113,12 @@ function connectedToServer(){
 
 function readsincoming(data) {
   process.stdout.write(data);
-
 }
 
 function uriCreator (requestURL){
 
   var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
   var uriProcess = uriReg.exec(requestURL);
-
 
   if(!uriProcess){
     theUri = '/'
