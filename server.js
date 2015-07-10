@@ -118,7 +118,7 @@ function requestReader(data, requestType, theUri){
 
 function headerBuildWrite (data, theUri){
   var dateTime = new Date();
-  var resourceLength;
+  var resourceLength = resourceList[theUri].length;
 
   status = 'HTTP/1.01 ' + statusCode + '\n';
   server = 'Server: ' + SERVER_NAME + '\n';
