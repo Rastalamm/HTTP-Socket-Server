@@ -59,7 +59,6 @@ function connectedToServer(){
 
   //sets the method in the header
   setsMethod (methodInput)
-  console.log('requestMethod', requestMethod)
 
   //Gets the URI from the client input
   uriCreator(requestURL);
@@ -74,11 +73,11 @@ function connectedToServer(){
 
 function readsincoming(data) {
   process.stdout.write(data);
-  //console.log(data);
+
 }
 
 function uriCreator (requestURL){
-  console.log(requestURL)
+
   var uriReg = /\/[^:\/\/www](([A-z0-9\-\%]+\/)*[A-z0-9\-\%]+)?/gm;
   var uriProcess = uriReg.exec(requestURL);
 
@@ -114,9 +113,6 @@ function getsMethodInput(clientInput) {
 
 function setsMethod (methodInput){
 
-  console.log('methodInput',methodInput);
-
-
   switch(methodInput){
 
     case 'I':
@@ -142,10 +138,6 @@ function setsMethod (methodInput){
 
   }
 }
-
-
-
-
 
 
 

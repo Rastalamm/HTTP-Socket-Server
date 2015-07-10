@@ -143,12 +143,11 @@ function headerBuildWrite (data, theUri){
 }
 
 function bodyBuildWrite (data, theUri){
-  console.log('theUri', resourceList.hasOwnProperty(theUri))
 
   var resourceCheck;
 
   if(!resourceList.hasOwnProperty(theUri)){
-    console.log('not on the list');
+
     resourceCheck = resourceList['/404.html'];
   }else{
     resourceCheck = resourceList[theUri];
