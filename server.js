@@ -4,13 +4,13 @@ var PORT = 8080;
 var HOST = '0.0.0.0';
 var STATUS_OK = 200;
 var STATUS_NO_CHANGE = 304;
-var STATUS_NOT_FOUND = 400;
+var STATUS_NOT_FOUND = 404;
 var SERVER_NAME = 'Always A Box';
 var serverTime = new Date(); //numbers format
 
 var server = net.createServer(onConnect);
 
-var resourceList ={
+var resourceList = {
   '/' : source.home,
   '/hydrogen.html' : source.hydrogen,
   '/helium.html': source.helium,
@@ -39,6 +39,7 @@ server.listen(PORT, function() {
 
 function onConnect(socket){
   socket.setEncoding('utf8');
+  console.log('you have a new connection');
   dataListener(socket)
 }
 
@@ -142,7 +143,18 @@ function headerBuildWrite (data, theUri){
 }
 
 function bodyBuildWrite (data, theUri){
-  bodyMessage = '\n\n' + resourceList[theUri];
+  console.log('theUri', resourceList.hasOwnProperty(theUri))
+
+  var resourceCheck;
+
+  if(!resourceList.hasOwnProperty(theUri)){
+    console.log('not on the list');
+    resourceCheck = resourceList['/404.html'];
+  }else{
+    resourceCheck = resourceList[theUri];
+  }
+
+  bodyMessage = '\n\n' + resourceCheck;
 }
 
 function checkFourOFour (theUri){
