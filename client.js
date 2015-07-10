@@ -83,7 +83,9 @@ function getsMethodInput(clientInput) {
 
 }
 
-
+//This is where the functionality comes into play
+//node api - http
+//http.request(options[, callback])#
 
 function setsMethod (methodInput){
 
