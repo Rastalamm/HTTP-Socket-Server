@@ -39,6 +39,7 @@ server.listen(PORT, function() {
 
 function onConnect(socket){
   socket.setEncoding('utf8');
+  console.log('you have a new connection');
   dataListener(socket)
 }
 
