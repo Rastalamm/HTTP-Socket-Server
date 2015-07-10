@@ -82,11 +82,17 @@ function readInput(data){
 
 }
 
+
+
+
 function requestReader(data, requestType, theUri){
+
+  modifiedFilter(data, theUri, modifiedDateRequest)
 
   switch (requestType){
 
     case 'GET':
+
       headerBuildWrite(data, theUri);
       bodyBuildWrite(data, theUri);
     break;
@@ -121,14 +127,6 @@ function headerBuildWrite (data, theUri){
   var dateTime = new Date();
   var resourceLength;
 
-  if(resourceList.hasOwnProperty(theUri)){
-    statusCode = STATUS_OK;
-    resourceLength = resourceList[theUri].length
-  }else{
-    statusCode = STATUS_NOT_FOUND;
-    resourceLength = 0;
-  }
-
   status = 'HTTP/1.01 ' + statusCode + '\n';
   server = 'Server: ' + SERVER_NAME + '\n';
   date = 'Date: ' + dateTime.toUTCString() + '\n';
@@ -142,4 +140,29 @@ function headerBuildWrite (data, theUri){
 
 function bodyBuildWrite (data, theUri){
   bodyMessage = '\n\n' + resourceList[theUri];
+}
+
+function modifiedFilter(data, theUri, modifiedDateRequest){
+
+  if(!resourceList.hasOwnProperty(theUri)){
+    statusCode = STATUS_NOT_FOUND;
+    resourceLength = 0;
+  }else{
+    //there is a request for modified
+    if(modifiedDateRequest){
+      //if servertime is > date on modified request
+      if(serverTime - modifiedDateRequest > 0){
+        statusCode = STATUS_NO_CHANGE;
+        resourceLength = resourceList[theUri].length
+      }else{
+        //if they want a new copy they go here
+        statusCode = STATUS_OK;
+        resourceLength = resourceList[theUri].length
+      }
+    }else{
+    //no modified request
+      statusCode = STATUS_OK;
+      resourceLength = resourceList[theUri].length
+    }
+  }
 }
