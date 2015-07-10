@@ -27,9 +27,23 @@ var requestURL = process.argv[process.argv.length-1];
 var clientInput = process.argv;
 
 
-
+//Error if host cannot be reached
 client.on('error', function(e){
-  console.log('problem with request: ' + e.message);
+
+  switch(e.message){
+
+    case 'EADDRNOTAVAIL':
+      console.log('Wrong port guy' + e);
+    break;
+
+    case 'ECONNREFUSED':
+      console.log('connection refused' + e);
+    break;
+
+    default:
+      console.log('This is the error' + e);
+  }
+
 })
 
 //function to optionally set the port
@@ -49,6 +63,10 @@ function portChecker (input){
   }
 
   return portSelected;
+
+}
+
+function hostCreator (input){
 
 }
 
