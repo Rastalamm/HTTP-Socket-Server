@@ -10,7 +10,7 @@ var serverTime = new Date(); //numbers format
 
 var server = net.createServer(onConnect);
 
-var resourceList ={
+var resourceList = {
   '/' : source.home,
   '/hydrogen.html' : source.hydrogen,
   '/helium.html': source.helium,
@@ -143,7 +143,18 @@ function headerBuildWrite (data, theUri){
 }
 
 function bodyBuildWrite (data, theUri){
-  bodyMessage = '\n\n' + resourceList[theUri];
+  console.log('theUri', resourceList.hasOwnProperty(theUri))
+
+  var resourceCheck;
+
+  if(!resourceList.hasOwnProperty(theUri)){
+    console.log('not on the list');
+    resourceCheck = resourceList['/404.html'];
+  }else{
+    resourceCheck = resourceList[theUri];
+  }
+
+  bodyMessage = '\n\n' + resourceCheck;
 }
 
 function checkFourOFour (theUri){

@@ -8,7 +8,11 @@ var HOST = '0.0.0.0';
 //Jason: .23
 //Judah: .24
 
-var client = net.connect({host : HOST, port : PORT}, connectedToServer);
+var portSelected = portChecker(process.argv)
+
+
+
+var client = net.connect({host : HOST, port : portSelected}, connectedToServer);
 
 var httpVersion = 'HTTP/1.1';
 
@@ -24,16 +28,38 @@ var theUri;
 var requestURL = process.argv[process.argv.length-1];
 var clientInput = process.argv;
 
+//function to optionally set the port
+function portChecker (input){
+
+  var portStripper = input.join(' ');
+
+  var portCheckReg = /port\s(\d{1,7})/g;
+  var portCheckProcess = portCheckReg.exec(portStripper);
+
+  portSelected = portCheckProcess;
+
+  if(!portSelected){
+    portSelected = PORT;
+  }else{
+    portSelected = portSelected[1];
+  }
+
+  return portSelected;
+
+}
+
+
+
 
 
 function connectedToServer(){
 
-
   //Gets the method client requested
-  getsMethodInput(clientInput)
+  getsMethodInput(clientInput);
 
   //sets the method in the header
   setsMethod (methodInput)
+  console.log('requestMethod', requestMethod)
 
   //Gets the URI from the client input
   uriCreator(requestURL);
@@ -71,11 +97,14 @@ function createHeader () {
 
 function getsMethodInput(clientInput) {
 
-  var methodInputReg = /\-[a-zA-Z]{1}\b/g;
-  var methodInputprocess =  methodInputReg.exec(clientInput);
+  var methodStripper = clientInput.join(' ')
+
+  var methodInputReg = /\s\-([a-zA-Z]{1})\b/g;
+  var methodInputprocess =  methodInputReg.exec(methodStripper);
 
   if(methodInputprocess){
-    methodInput = methodInputprocess[0].charAt(1);
+
+    methodInput = methodInputprocess[1];
   }else{
     //sets the default request type
     methodInput = 'G'
@@ -84,6 +113,9 @@ function getsMethodInput(clientInput) {
 }
 
 function setsMethod (methodInput){
+
+  console.log('methodInput',methodInput);
+
 
   switch(methodInput){
 
@@ -97,11 +129,16 @@ function setsMethod (methodInput){
       requestMethod = 'HEAD';
     break;
 
-
     case 'G':
     case 'g':
       requestMethod = 'GET';
+    break;
+
+    //just in case it gets here - always send a get request
     default:
+    console.log('why are you always here???');
+      requestMethod = 'GET';
+    break;
 
   }
 }
