@@ -47,7 +47,6 @@ function dataListener(socket){
 
   socket.on('data', function(data){
 
-
     readInput(data);
     requestReader(data, requestType, theUri);
 
@@ -64,6 +63,8 @@ function dataListener(socket){
 
 
 function readInput(data){
+
+  console.log(data);
 
   var reg1 = /^\w+/g;
   var firstWord = reg1.exec(data);

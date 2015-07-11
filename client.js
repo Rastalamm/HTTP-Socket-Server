@@ -40,17 +40,18 @@ client.on('error', function(e){
   switch(e.message){
 
     case 'ECONNREFUSED':
-      console.log('connection refused' + e);
+      process.stdout.write('connection refused' + e);
     break;
 
     case 'EADDRNOTAVAIL':
-      console.log('Wrong port guy' + e);
+      process.stdout.write('Wrong port guy' + e);
     break;
 
     default:
-      console.log('This is the error' + e);
+      process.stdout.write('This is the error' + e);
     break;
-  }
+  };
+  process.exit();
 
 })
 
@@ -70,8 +71,6 @@ function portChecker (input){
     portSelected = portSelected[1];
   }
 
-  console.log('portSelected', portSelected);
-
   return portSelected;
 
 }
@@ -85,14 +84,17 @@ function hostCreator (input){
   if(hostCheckProcess){
     hostSelected = hostCheckProcess[0];
   }else{
-    throw RangeError('bad host');
+    process.stdout.write('bad host');
+    process.exit();
   }
 
-  console.log('hostSelected', hostSelected);
   return hostSelected;
 }
 
 function connectedToServer(){
+
+
+
 
   //Gets the method client requested
   getsMethodInput(clientInput);
@@ -111,8 +113,23 @@ function connectedToServer(){
 
 }
 
+//Check the info being passed in - if its not a proper header, fail it
+function checkForHeader (data) {
+  data.toString();
+
+  var dataStripper = /^(http)|(HTTP)/g;
+  var dataProcess = dataStripper.exec(data);
+
+  if(dataProcess[0] !== 'HTTP'){
+    process.stdout.write('Invalid header being returned');
+  }else{
+    process.stdout.write(data)
+  }
+}
+
+
 function readsincoming(data) {
-  process.stdout.write(data);
+  checkForHeader (data)
 }
 
 function uriCreator (requestURL){
