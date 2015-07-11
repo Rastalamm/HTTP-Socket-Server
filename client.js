@@ -1,4 +1,5 @@
 var net = require('net');
+var source = require('./sources');
 var PORT = 8080;
 var HOST = '0.0.0.0';
 
@@ -153,8 +154,9 @@ function getsMethodInput(clientInput) {
 
   var methodStripper = clientInput.join(' ')
 
-  var methodInputReg = /\s\-([a-zA-Z]{1})\b/g;
+  var methodInputReg = /\s\-([a-zA-Z]{1,4})\b/g;
   var methodInputprocess =  methodInputReg.exec(methodStripper);
+
 
   if(methodInputprocess){
 
@@ -163,12 +165,17 @@ function getsMethodInput(clientInput) {
     //sets the default request type
     methodInput = 'G'
   }
-
 }
 
 function setsMethod (methodInput){
 
   switch(methodInput){
+
+    case 'HELP':
+    case 'help':
+      process.stdout.write('You need help \n i & h for HEAD \n g for GET \n p for POST');
+      process.exit();
+    break;
 
     case 'I':
     case 'i':
@@ -185,6 +192,11 @@ function setsMethod (methodInput){
       requestMethod = 'GET';
     break;
 
+    case 'P':
+    case 'p':
+      requestMethod = 'POST';
+    break;
+
     //just in case it gets here - always send a get request
     default:
     console.log('why are you always here???');
@@ -193,9 +205,6 @@ function setsMethod (methodInput){
 
   }
 }
-
-
-
 
 
 

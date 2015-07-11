@@ -101,6 +101,7 @@ function requestReader(data, requestType, theUri){
     break;
 
     case 'POST':
+    console.log('post');
       //'I want to send you data';
     break;
 
