@@ -94,9 +94,6 @@ function hostCreator (input){
 
 function connectedToServer(){
 
-
-
-
   //Gets the method client requested
   getsMethodInput(clientInput);
 
@@ -124,13 +121,27 @@ function checkForHeader (data) {
   if(dataProcess[0] !== 'HTTP'){
     process.stdout.write('Invalid header being returned');
   }else{
-    process.stdout.write(data)
+    process.stdout.write(data);
   }
 }
 
+function checkForStatusCode (data){
+  data.toString();
+
+  var statusStripper = /.\d+\s(\b\d{3}\b)/g;
+  var statusProcess = statusStripper.exec(data);
+
+  if(Number(statusProcess[1]) === 500){
+    process.stdout.write('There was an interal server Error')
+    process.exit();
+  }else{
+    checkForHeader(data);
+  }
+
+}
 
 function readsincoming(data) {
-  checkForHeader (data)
+  checkForStatusCode(data);
 }
 
 function uriCreator (requestURL){
@@ -199,7 +210,6 @@ function setsMethod (methodInput){
 
     //just in case it gets here - always send a get request
     default:
-    console.log('why are you always here???');
       requestMethod = 'GET';
     break;
 
